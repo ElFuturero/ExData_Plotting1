@@ -41,4 +41,23 @@ globalActive <- read.csv2("./data/household_power_consumption.txt", stringsAsFac
   mutate(DateTime = as.POSIXct(strptime(DateTime, "%d/%m/%Y %H:%M:%S")))
 
 # Now let's graph. First let's set the device that we want
-# png("plot1.png", width = 480, height = 480)
+png("plot2.png", width = 480, height = 480)
+
+# Now let's create our plot
+
+with(globalActive,
+     plot(
+       DateTime,
+       Global_active_power,
+       type = "l",
+       col = "black",
+       ylab = "Global Active Power (kilowatts)",
+       xlab = ""
+       )
+     )
+
+# Now finally let's turn off the device
+
+dev.off()
+
+# Done! :)
