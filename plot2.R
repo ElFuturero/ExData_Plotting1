@@ -35,10 +35,10 @@ if (!file.exists(fileDest)){
 globalActive <- read.csv2("./data/household_power_consumption.txt", stringsAsFactors = FALSE) %>%
   tbl_df %>%
   filter(Date == "1/2/2007" | Date == "2/2/2007") %>%
-  select(Global_active_power, Date)  %>%  # we use select to get only the column we want for this plot
+  select(Global_active_power, Date, Time)  %>%  # we use select to get only the column we want for this plot
   mutate(Global_active_power = as.numeric(Global_active_power)) %>%
-  mutate(Date = as.Date(Date, format = "%d/%m/%Y"))
+  mutate(DateTime = paste(Date, Time, sep = " ")) %>%
+  mutate(DateTime = as.POSIXct(strptime(DateTime, "%d/%m/%Y %H:%M:%S")))
 
 # Now let's graph. First let's set the device that we want
-
 # png("plot1.png", width = 480, height = 480)
