@@ -35,29 +35,56 @@ if (!file.exists(fileDest)){
 subM <- read.csv2("./data/household_power_consumption.txt", stringsAsFactors = FALSE) %>%
   tbl_df %>%
   filter(Date == "1/2/2007" | Date == "2/2/2007") %>%
-  select(Global_active_power, Date, Time)  %>%  # we use select to get only the column we want for this plot
-  mutate(Global_active_power = as.numeric(Global_active_power)) %>%
-  mutate(DateTime = paste(Date, Time, sep = " ")) %>%
-  mutate(DateTime = as.POSIXct(strptime(DateTime, "%d/%m/%Y %H:%M:%S")))
+  select(Date, Time, Sub_metering_1, Sub_metering_2, Sub_metering_3)  %>%  
+  mutate(Sub_metering_1 = as.numeric(Sub_metering_1)) %>%
+  mutate(Sub_metering_2 = as.numeric(Sub_metering_2)) %>%
+  mutate(Sub_metering_3 = as.numeric(Sub_metering_3)) %>%
+  mutate(datetime = paste(Date, Time, sep = " ")) %>%
+  mutate(datetime = as.POSIXct(strptime(datetime, "%d/%m/%Y %H:%M:%S")))
 
 # Now let's graph. First let's set the device that we want
-png("plot2.png", width = 480, height = 480)
 
-# Now let's create our plot
+png("plot3.png", width = 480, height = 480)
 
-with(globalActive,
-     plot(
-       DateTime,
-       Global_active_power,
-       type = "l",
-       col = "black",
-       ylab = "Global Active Power (kilowatts)",
-       xlab = ""
-     )
-)
+# Now let's create our plot. Here's the one for the first sub meter
+
+plot(
+  subM$datetime,
+  subM$Sub_metering_1,
+  type = "l",
+  xlab ="",
+  ylab ="Energy sub metering"
+  )
+
+# Now let's do the second sub-meter
+
+lines(
+  subM$datetime,
+  subM$Sub_metering_2,
+  type = "l",
+  col = "red"
+  )
+
+# Now let's add the final sub-meter
+
+lines(
+  subM$datetime,
+  subM$Sub_metering_3,
+  type = "l",
+  col = "blue"
+  )
+
+# Now let's annotate with the legend function
+
+legend(
+  "topright",
+  legend = c("Sub_metering_1","Sub_metering_2","Sub_metering_3"),
+  col = c("black", "red", "blue"),
+  lty = c(1,1,1)
+  )
 
 # Now finally let's turn off the device
-
+ 
 dev.off()
 
 # Done! :)
