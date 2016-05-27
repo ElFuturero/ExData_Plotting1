@@ -2,7 +2,7 @@
 # Student: Hector E. Meza Delgado
 # May 2016
 
-# Plot 1
+# Plot 2
 
 # First we load up the dplyr libray in order to best use data frames
 
@@ -35,18 +35,9 @@ if (!file.exists(fileDest)){
 globalActive <- read.csv2("./data/household_power_consumption.txt", stringsAsFactors = FALSE) %>%
   tbl_df %>%
   filter(Date == "1/2/2007" | Date == "2/2/2007") %>%
-  select(Global_active_power)  %>%  # we use select to get only the column we want for this plot
+  select(Global_active_power, Date)  %>%  # we use select to get only the column we want for this plot
   mutate(Global_active_power = as.numeric(Global_active_power))
 
 # Now let's graph. First let's set the device that we want
 
-png("plot1.png", width = 480, height = 480)
-
-# Now let's make the histogram
-
-hist(globalActive$Global_active_power, col = "red", breaks = 12,
-     main = "Global Active Power", xlab = "Global Active Power (kilowatts)")
-
-# Finally let's close the device
-
-dev.off()
+# png("plot1.png", width = 480, height = 480)
