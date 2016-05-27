@@ -32,25 +32,47 @@ if (!file.exists(fileDest)){
 # we know from preliminary exploration of the file that it is separated by semi-colons so
 # we'll use the read.csv2 function
 
-subM <- read.csv2("./data/household_power_consumption.txt", stringsAsFactors = FALSE) %>%
+hhpower <- read.csv2("./data/household_power_consumption.txt", stringsAsFactors = FALSE) %>%
   tbl_df %>%
-  filter(Date == "1/2/2007" | Date == "2/2/2007") %>%
-  select(Date, Time, Sub_metering_1, Sub_metering_2, Sub_metering_3)  %>%  
+  filter(Date == "1/2/2007" | Date == "2/2/2007") %>% # we get the dates we want
+  mutate(Voltage = as.numeric(Voltage)) %>%  # we transform the variables into numeric
+  mutate(Global_active_power = as.numeric(Global_active_power)) %>%
+  mutate(Global_reactive_power = as.numeric(Global_reactive_power)) %>%
   mutate(Sub_metering_1 = as.numeric(Sub_metering_1)) %>%
   mutate(Sub_metering_2 = as.numeric(Sub_metering_2)) %>%
   mutate(Sub_metering_3 = as.numeric(Sub_metering_3)) %>%
   mutate(datetime = paste(Date, Time, sep = " ")) %>%
   mutate(datetime = as.POSIXct(strptime(datetime, "%d/%m/%Y %H:%M:%S")))
 
+
 # Now let's graph. First let's set the device that we want
 
-png("plot3.png", width = 480, height = 480)
+png("plot4.png", width = 480, height = 480)
 
-# Now let's create our plot. Here's the one for the first sub meter
+# Now let's set our layout with mfcol
+
+par(
+  mfcol = c(2,2)
+)
+
+# Now let's create our first plot.
 
 plot(
-  subM$datetime,
-  subM$Sub_metering_1,
+  hhpower$datetime,
+  hhpower$Global_active_power,
+  type = "l",
+  col = "black",
+  ylab = "Global Active Power",
+  xlab = ""
+)
+
+# Now our second plot
+
+# Here's the one for the first sub meter
+
+plot(
+  hhpower$datetime,
+  hhpower$Sub_metering_1,
   type = "l",
   xlab ="",
   ylab ="Energy sub metering"
@@ -59,8 +81,8 @@ plot(
 # Now let's do the second sub-meter
 
 lines(
-  subM$datetime,
-  subM$Sub_metering_2,
+  hhpower$datetime,
+  hhpower$Sub_metering_2,
   type = "l",
   col = "red"
   )
@@ -68,23 +90,46 @@ lines(
 # Now let's add the final sub-meter
 
 lines(
-  subM$datetime,
-  subM$Sub_metering_3,
+  hhpower$datetime,
+  hhpower$Sub_metering_3,
   type = "l",
   col = "blue"
   )
 
-# Now let's annotate with the legend function
+# # Now let's annotate with the legend function
 
 legend(
   "topright",
   legend = c("Sub_metering_1","Sub_metering_2","Sub_metering_3"),
   col = c("black", "red", "blue"),
-  lty = c(1,1,1)
+  lty = c(1,1,1),
+  bty = "n"
+  )
+
+# Now for the new plots for this exercise, first Voltage vs. datetime
+
+plot(
+  hhpower$datetime,
+  hhpower$Voltage,
+  col = "black",
+  type = "l",
+  xlab = "datetime",
+  ylab = "Voltage"
+  )
+
+# Now the final plot of Global_reactive_power vs. datetime
+
+plot(
+  hhpower$datetime,
+  hhpower$Global_reactive_power,
+  col = "black",
+  type = "l",
+  xlab = "datetime",
+  ylab = "Global_reactive_power"
   )
 
 # Now finally let's turn off the device
- 
+
 dev.off()
 
 # Done! :)
