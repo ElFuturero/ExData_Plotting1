@@ -35,3 +35,16 @@ globalActive <- read.csv2("./data/household_power_consumption.txt", stringsAsFac
   filter(Date == "1/2/2007" | Date == "2/2/2007") %>%
   select(Global_active_power)  %>%  # we use select to get only the column we want for this plot
   mutate(Global_active_power = as.numeric(Global_active_power))
+
+# Now let's graph. First let's set the device that we want
+
+png("plot1.png", width = 480, height = 480)
+
+# Now let's make the histogram
+
+hist(globalActive$Global_active_power, col = "red", breaks = 12,
+     main = "Global Active Power", xlab = "Global Active Power (kilowatts)")
+
+# Finally let's close the device
+
+dev.off()
