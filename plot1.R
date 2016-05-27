@@ -22,3 +22,13 @@ if (!file.exists(fileDest)){
   # Now let's unzip the file contents
   unzip(fileDest, exdir = "./data" )
 }
+
+# Now we will read the household_power_consumption.txt file and load it up into a dataframe.
+# We'll use piping and the dplyr library in order to read only the rows corresponding to the
+# dates that we want.
+
+# we know from preliminary exploration of the file that it is separated by semi-colons so
+# we'll use the read.csv2 function
+
+hhpower <- read.csv2("./data/household_power_consumption.txt") %>%
+  filter(Date == "01/02/2007" | Date == "02/02")
